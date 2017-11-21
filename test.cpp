@@ -8,6 +8,6 @@ void test0() {
 }
 
 int main() {
-    cout << "Test 0 -----------------------" << endl;
-    test0();
+	cout << "Test 0 -----------------------" << endl;
+	test0();
 }
