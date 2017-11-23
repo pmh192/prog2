@@ -1,13 +1,16 @@
 all: main
 
-test: test.o
-	g++ -std=c++11 test.o -o test_bin && ./test_bin
+test: test.o union_find.o
+	g++ -std=c++11 test.o union_find.o -o test_bin && ./test_bin
 
 test.o: test.cpp
 	g++ -std=c++11 -c test.cpp
 
 graph.o: graph.cpp
 	g++ -std=c++11 -c graph.cpp
+
+union_find.o: union_find.cpp
+	g++ -std=c++11 -c union_find.cpp
 
 main.o: main.cpp
 	g++ -std=c++11 -c main.cpp
