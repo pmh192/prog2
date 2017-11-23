@@ -1,7 +1,9 @@
 #include "union_find.h"
 
 void UnionFind::add(int loc) {
-	sets[loc] = loc;
+	if (sets.find(loc) == sets.end()) {
+		sets[loc] = loc;
+	}
 }
 
 int UnionFind::find(int loc) {
@@ -13,4 +15,8 @@ int UnionFind::find(int loc) {
 
 void UnionFind::combine(int loc1, int loc2) {
 	sets[find(loc1)] = find(loc2);
+}
+
+int UnionFind::components() {
+	return 0;
 }

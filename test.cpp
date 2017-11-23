@@ -58,11 +58,13 @@ void test0() {
 
 	for (int i = 1; i < 7; i++) {
 		uf.combine(i, i+1);
+		uf.add(i);
 	}
 
 	vector<int> ints;
 	for (int i = 1; i < 8; i++) {
 		ints.push_back(uf.find(i));
+		uf.add(i);
 	}
 
 	assertEqual(ints);
@@ -83,6 +85,7 @@ void test1() {
 
 	uf.combine(0, -5);
 	for (int i = 0; i < 10; i++) {
+		uf.add(-5);
 		vector<int> v1 {uf.find(0), uf.find(-5), uf.find(9)};
 		assertNotEqual(v1);
 		assertEqual(v1[0], v1[1]);
@@ -95,9 +98,16 @@ void test1() {
 	}
 }
 
+void test2() {
+	Graph graph;
+	graph.bid(1, 2, 5);
+}
+
 int main() {
 	cout << "Test 0 -----------------------" << endl;
 	test0();
 	cout << "Test 1 -----------------------" << endl;
 	test1();
+	cout << "Test 2 -----------------------" << endl;
+	test2();
 }

@@ -31,9 +31,9 @@ int main() {
 			else		   { cout << "NO"  << endl; }
 		}
 		else if (command == "LIST?") {
-			vector<pair<int, int> > list = g.solution_edges();
+			set<Graph::edge> list = g.solution_edges();
 			for (const auto& p : list) {
-				cout << "(" << p.first << "," << p.second << ")" << endl;
+				cout << "(" << p.node1 << "," << p.node2 << ")" << endl;
 			}
 		}
 		else if (command == "SHORTEST_PATH?") {
