@@ -25,13 +25,14 @@ private:
 
 	priority_queue<edge> bids;
 	set<edge> solution;
-	unordered_map<int, set<int> > adjList;
+	unordered_map<int, set<pair<int, int> > > adjList;
 	UnionFind uf;
 
 	int solution_cost;
 	bool has_cycle;
 
 	void addEdge(edge& e);
+	void runKruskals();
 
 public:
 

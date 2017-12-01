@@ -14,8 +14,8 @@ void Graph::bid(int node1, int node2, double cost) {
 
 
 void Graph::addEdge(edge& e) {
-	adjList[e.node1].insert(e.node2);
-	adjList[e.node2].insert(e.node1);
+	adjList[e.node1].insert(pair<int, int>(e.node2, e.cost));
+	adjList[e.node2].insert(pair<int, int>(e.node1, e.cost));
 
 	solution.insert(e);
 	this->solution_cost += e.cost;
@@ -36,10 +36,14 @@ void Graph::mandatory(int node1, int node2, double cost) {
 }
 
 double Graph::cost() {
+	runKruskals();
+
 	return this->solution_cost;
 }
 
 int Graph::components() {
+	runKruskals();
+
 	return uf.components();
 }
 
@@ -48,8 +52,7 @@ bool Graph::cycle() {
 	return has_cycle;
 }
 
-
-set<Graph::edge>* Graph::solution_edges() {
+void Graph::runKruskals() {
 	while (!bids.empty()) {
 		edge e = bids.top();
 		bids.pop();
@@ -58,6 +61,12 @@ set<Graph::edge>* Graph::solution_edges() {
 			addEdge(e);
 		}
 	}
+}
+
+
+set<Graph::edge>* Graph::solution_edges() {
+	runKruskals();
+
 	return &(this->solution);
 }
 
@@ -69,11 +78,13 @@ struct state {
 	state(int n, int d) : node(n), dist(d) {}
 
 	bool operator<(state other) const {
-		return dist < other.dist;
+		return dist > other.dist;
 	}
 };
 
 vector<int> Graph::shortest_path(int node1, int node2) {
+	runKruskals();
+
 	if (node1 == node2) {
 		vector<int> list;
 		list.push_back(node1);
@@ -86,28 +97,33 @@ vector<int> Graph::shortest_path(int node1, int node2) {
 	state first(node1, 0);
 	first.path.push_back(node1);
 
-	set<int> visited;
-	visited.insert(node1);
+	unordered_map<int, int> visited;
+	visited[node1] = 0;
 
 	states.push(first);
 
 	while (!states.empty()) {
 		state s = states.top();
 		states.pop();
+		//cout << "visiting " << s.node << " wit dist " << s.dist << endl;
 
-		set<int> adj = adjList[s.node];
+		if (s.node == node2) {
+			return s.path;
+		}
+
+		set<pair<int, int> > adj = adjList[s.node];
 		for (auto it = adj.begin(); it != adj.end(); it++) {
-			state newState(*it, s.dist + 5);
+			int n = (*it).first;
+			int c = (*it).second;
+			state newState(n, s.dist + c);
 			newState.path = s.path;
-			newState.path.push_back(*it);
+			newState.path.push_back(n);
 
-			if (newState.node == node2) {
-				return newState.path;
-			}
-
-			if (visited.find(newState.node) == visited.end()) {
+			auto it_dist = visited.find(newState.node);
+			if (it_dist == visited.end() || newState.dist < it_dist->second) {
+				//cout << "pushing " << newState.node << " wit dist " << newState.dist << endl;
 				states.push(newState);
-				visited.insert(newState.node);
+				visited[newState.node] = newState.dist;
 			}
 		}
 	}

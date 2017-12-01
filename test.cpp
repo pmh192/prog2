@@ -121,6 +121,20 @@ void test2() {
 }
 
 void test3() {
+	UnionFind uf;
+	for (int i = 1; i <= 5; i++) {
+		uf.add(i);
+	}
+
+	uf.combine(1, 2);
+	uf.combine(4, 5);
+	uf.combine(1, 5);
+	uf.combine(1, 3);
+
+	assertEqual(uf.find(4), uf.find(2));
+}
+
+void test4() {
 	Graph graph;
 	graph.bid(1, 2, 5);
 }
@@ -134,4 +148,6 @@ int main() {
 	test2();
 	cout << "Test 3 -----------------------" << endl;
 	test3();
+	cout << "Test 4 -----------------------" << endl;
+	test4();
 }
