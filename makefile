@@ -15,8 +15,8 @@ union_find.o: union_find.cpp
 main.o: main.cpp
 	g++ -std=c++11 -c main.cpp
 
-main: main.o graph.o
-	g++ -std=c++11 graph.o main.o -o prog2
+main: main.o graph.o union_find.o
+	g++ -std=c++11 graph.o main.o union_find.o -o prog2
 
 
 clean:

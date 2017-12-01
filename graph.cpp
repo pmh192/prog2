@@ -13,13 +13,26 @@ void Graph::bid(int node1, int node2, double cost) {
 }
 
 
-void Graph::mandatory(int node1, int node2, double cost) {
-	solution.insert(edge(node1, node2, cost));
-	this->solution_cost += cost;
+void Graph::addEdge(edge& e) {
+	adjList[e.node1].insert(e.node2);
+	adjList[e.node2].insert(e.node1);
 
-	uf.add(node1);
-	uf.add(node2);
-	uf.combine(node1, node2);
+	solution.insert(e);
+	this->solution_cost += e.cost;
+
+	uf.add(e.node1);
+	uf.add(e.node2);
+
+	if (!has_cycle) {
+		has_cycle = uf.find(e.node1) == uf.find(e.node2);
+	}
+
+	uf.combine(e.node1, e.node2);
+}
+
+void Graph::mandatory(int node1, int node2, double cost) {
+	edge e(node1, node2, cost);
+	addEdge(e);
 }
 
 double Graph::cost() {
@@ -36,12 +49,69 @@ bool Graph::cycle() {
 }
 
 
-set<Graph::edge> Graph::solution_edges() {
-	return this->solution;
+set<Graph::edge>* Graph::solution_edges() {
+	while (!bids.empty()) {
+		edge e = bids.top();
+		bids.pop();
+
+		if (uf.find(e.node1) != uf.find(e.node2)) {
+			addEdge(e);
+		}
+	}
+	return &(this->solution);
 }
 
 
+struct state {
+	int node, dist;
+	vector<int> path;
+
+	state(int n, int d) : node(n), dist(d) {}
+
+	bool operator<(state other) const {
+		return dist < other.dist;
+	}
+};
+
 vector<int> Graph::shortest_path(int node1, int node2) {
-	vector<int> list;
-	return list;
+	if (node1 == node2) {
+		vector<int> list;
+		list.push_back(node1);
+		return list;
+	}
+
+
+	priority_queue<state> states;
+
+	state first(node1, 0);
+	first.path.push_back(node1);
+
+	set<int> visited;
+	visited.insert(node1);
+
+	states.push(first);
+
+	while (!states.empty()) {
+		state s = states.top();
+		states.pop();
+
+		set<int> adj = adjList[s.node];
+		for (auto it = adj.begin(); it != adj.end(); it++) {
+			state newState(*it, s.dist + 5);
+			newState.path = s.path;
+			newState.path.push_back(*it);
+
+			if (newState.node == node2) {
+				return newState.path;
+			}
+
+			if (visited.find(newState.node) == visited.end()) {
+				states.push(newState);
+				visited.insert(newState.node);
+			}
+		}
+	}
+
+	vector<int> l;
+	return l;
 }

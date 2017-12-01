@@ -31,10 +31,11 @@ int main() {
 			else		   { cout << "NO"  << endl; }
 		}
 		else if (command == "LIST?") {
-			set<Graph::edge> list = g.solution_edges();
-			for (const auto& p : list) {
-				cout << "(" << p.node1 << "," << p.node2 << ")" << endl;
+			set<Graph::edge> list = *(g.solution_edges());
+			for (auto it = list.rbegin(); it != list.rend(); it++) {
+				cout << "(" << it->node1 << "," << it->node2 << ") ";
 			}
+			cout << endl;
 		}
 		else if (command == "SHORTEST_PATH?") {
 			cin >> n1 >> n2;

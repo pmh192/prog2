@@ -25,10 +25,13 @@ private:
 
 	priority_queue<edge> bids;
 	set<edge> solution;
+	unordered_map<int, set<int> > adjList;
 	UnionFind uf;
 
 	int solution_cost;
 	bool has_cycle;
+
+	void addEdge(edge& e);
 
 public:
 
@@ -40,7 +43,7 @@ public:
 	double cost();
 	int components();
 	bool cycle();
-	set<edge> solution_edges();
+	set<edge>* solution_edges();
 	vector<int> shortest_path(int node1, int node2);
 
 };

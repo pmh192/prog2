@@ -99,6 +99,28 @@ void test1() {
 }
 
 void test2() {
+	UnionFind uf;
+	assertEqual(uf.components(), 0);
+
+	uf.add(1);
+	uf.add(5);
+	uf.add(15);
+
+	assertEqual(uf.components(), 3);
+
+	uf.combine(1, 5);
+	assertEqual(uf.components(), 2);
+
+	uf.combine(1, 15);
+	uf.add(1);
+	assertEqual(uf.components(), 1);
+
+	uf.combine(5, 15);
+	uf.add(15);
+	assertEqual(uf.components(), 1);
+}
+
+void test3() {
 	Graph graph;
 	graph.bid(1, 2, 5);
 }
@@ -110,4 +132,6 @@ int main() {
 	test1();
 	cout << "Test 2 -----------------------" << endl;
 	test2();
+	cout << "Test 3 -----------------------" << endl;
+	test3();
 }
